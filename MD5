@@ -1,6 +1,6 @@
-f5f61d7cf248743e5eccf7f0d1e8dea7 *DESCRIPTION
+507e835d8b217d661d65850e8ccc7a8d *DESCRIPTION
 49f96be1cfe5aba7ed8de8a8dbb2e24d *NAMESPACE
-b7d9ab37c7f569e97f5102b0cc15990a *NEWS.md
+ec0eaabca435dc48f21f1e2fa1773560 *NEWS.md
 8c1e70c75b835e3e8252e2243bf09c06 *R/GenCross.R
 3abafb57ae7e27b963319e79ac9b4681 *R/GenCube.R
 85e6197d5b64d6fdfa2e3754200d6e25 *R/GenProdSimplex.R
@@ -15,8 +15,8 @@ aab882ae7bf7851b27202f7d496b641d *R/fileToMatrix.R
 b779772a36f2787b714a496ba8941a93 *R/round_polytope.R
 403c845a71a74abe3ce4b76d5df9882b *R/zzz.R
 f9ab9bdfbbd05397bf65fb935efafdc5 *README.md
-e34dea2c28c29c1b0a9c4c21fafa5100 *inst/AUTHORS
-262382ae67a14f43caa2bf153b6cb8d4 *inst/COPYRIGHTS
+f198c825b9f3f91fb76d265d07facc76 *inst/AUTHORS
+df378b4b9433b9347a47c36d314c4904 *inst/COPYRIGHTS
 5af69a9a33ea06915db133f6a8daa387 *inst/extdata/birk10.ine
 278394cca417a3857c9c1dd7cd5a1c09 *inst/extdata/birk11.ine
 1d33119f631f8838de01dfe798428781 *inst/extdata/birk3.ine
@@ -36,8 +36,6 @@ bdae6e3cdc79cd9acd082e545ce137d1 *inst/extdata/linear_extensions/simple_poset.tx
 17d1f66ce09a26cd15d741f36f8bc4e8 *inst/extdata/simplex10.ext
 142dd3bbe174aa92389a02e01b782da9 *inst/extdata/simplex10.ine
 ca3bce4501f5047c33eb4f3dd8b539fe *inst/extdata/skinny_cube10.ine
-8d5465f72f6a55f6acdf027ce96ca71b *inst/tools/r-stripper/stripper
-f426ad4fb45445dc5eebf38b31326cb2 *inst/tools/r-stripper/stripper.R
 6d2422fbcc94085851a29661b3c91492 *inst/volesti.pdf
 ee845662b7444beb7f2b0633618d6302 *man/GenCross.Rd
 fb3a111c541029f2a2ec2072265e0b91 *man/GenCube.Rd
@@ -69,8 +67,8 @@ d0b9efaad449ecc431ada29b34135e6a *man/rand_rotate.Rd
 7f5231e025102e1bbea838e192552b47 *man/sample_points.Rd
 c9231c8eea76661f22cfbda2856a6f92 *man/volume.Rd
 5ecb39c4b338bfe0b5ae2aa9003448cf *src/InnerBall.cpp
-4b51a32b5b09183a90e868906f924628 *src/Makevars
-1f615bb24612cc30f2d01f600aeef2a4 *src/Makevars.win
+b16646c6535484e455dd26ad8c83ed3a *src/Makevars
+ae6c52d03eb001e53f91d86c9bd64157 *src/Makevars.win
 232fcadf7c8e09da3d0d09db73402ab9 *src/RcppExports.cpp
 fd97edcbe9623afa7f4ed2e9da2cda19 *src/SliceOfSimplex.cpp
 f1809e3ea968efb8095c78d2c630d794 *src/copula1.cpp
