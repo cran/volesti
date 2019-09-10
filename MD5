@@ -1,6 +1,6 @@
-507e835d8b217d661d65850e8ccc7a8d *DESCRIPTION
+6ab0cca319e105bc51d0380450a1607d *DESCRIPTION
 49f96be1cfe5aba7ed8de8a8dbb2e24d *NAMESPACE
-ec0eaabca435dc48f21f1e2fa1773560 *NEWS.md
+b4f70171517dfd80ed3e4d910016065d *NEWS.md
 8c1e70c75b835e3e8252e2243bf09c06 *R/GenCross.R
 3abafb57ae7e27b963319e79ac9b4681 *R/GenCube.R
 85e6197d5b64d6fdfa2e3754200d6e25 *R/GenProdSimplex.R
@@ -36,7 +36,6 @@ bdae6e3cdc79cd9acd082e545ce137d1 *inst/extdata/linear_extensions/simple_poset.tx
 17d1f66ce09a26cd15d741f36f8bc4e8 *inst/extdata/simplex10.ext
 142dd3bbe174aa92389a02e01b782da9 *inst/extdata/simplex10.ine
 ca3bce4501f5047c33eb4f3dd8b539fe *inst/extdata/skinny_cube10.ine
-6d2422fbcc94085851a29661b3c91492 *inst/volesti.pdf
 ee845662b7444beb7f2b0633618d6302 *man/GenCross.Rd
 fb3a111c541029f2a2ec2072265e0b91 *man/GenCube.Rd
 5c22728280ef7a5cbb85319f302a344a *man/GenProdSimplex.Rd
@@ -67,7 +66,7 @@ d0b9efaad449ecc431ada29b34135e6a *man/rand_rotate.Rd
 7f5231e025102e1bbea838e192552b47 *man/sample_points.Rd
 c9231c8eea76661f22cfbda2856a6f92 *man/volume.Rd
 5ecb39c4b338bfe0b5ae2aa9003448cf *src/InnerBall.cpp
-b16646c6535484e455dd26ad8c83ed3a *src/Makevars
+5778ba381d5ef7034f34c83ea1ae50ae *src/Makevars
 ae6c52d03eb001e53f91d86c9bd64157 *src/Makevars.win
 232fcadf7c8e09da3d0d09db73402ab9 *src/RcppExports.cpp
 fd97edcbe9623afa7f4ed2e9da2cda19 *src/SliceOfSimplex.cpp
@@ -83,7 +82,7 @@ b85346fda4caed732206e866eeede20c *src/external/lpsolve/build/lp_solve/lp_BFP2.c
 1e4d2de5bc6177d7b5c397b6ab470711 *src/external/lpsolve/build/lp_solve/lp_Hash.c
 4ca3af02a366a6d70df63288da028aa6 *src/external/lpsolve/build/lp_solve/lp_LUSOL.c
 57c7e8103f98cca5d4ee665d9057911d *src/external/lpsolve/build/lp_solve/lp_MDO.c
-7b1cbacd3589fde036bad38bf03c2c61 *src/external/lpsolve/build/lp_solve/lp_MPS.c
+5a918787b186194261ac8cf4e419a284 *src/external/lpsolve/build/lp_solve/lp_MPS.c
 1cc8732a43e88e895d4f2db54964e441 *src/external/lpsolve/build/lp_solve/lp_SOS.c
 b1aae19001b503830ecb7c776e1f0a02 *src/external/lpsolve/build/lp_solve/lp_crash.c
 cd1d2b860a41e1d82785acfec3479d47 *src/external/lpsolve/build/lp_solve/lp_lib.c
@@ -134,7 +133,7 @@ a511fd615183deccd43706525ea13da1 *src/external/lpsolve/headers/include/lp_scale.
 11590e5896fa225c744c5e8ca77eb640 *src/external/lpsolve/headers/include/lp_types.h
 cdd729afcaf54b5a626bb22c6d2d7f68 *src/external/lpsolve/headers/include/lp_utils.h
 39e562dd71cf7aca9e3bd33a1bb1b1c1 *src/external/lpsolve/headers/include/lp_wlp.h
-7b422fa103a1fea3940191e78448292f *src/external/lpsolve/headers/include/lpkit.h
+d9ebe1588ea718d4f5e7711fc34d5a70 *src/external/lpsolve/headers/include/lpkit.h
 f7586ac86362ef6a8629896a03235e9e *src/external/lpsolve/headers/include/lusol.h
 e95c50fe9f66c6a21b4837cd5b17b95d *src/external/lpsolve/headers/include/mmio.h
 0071c6c73daba6f12bc06a2eb1f6e23f *src/external/lpsolve/headers/include/myblas.h
