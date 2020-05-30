@@ -2,15 +2,15 @@ context("Zonotopes' volume test")
 
 library(volesti)
 
-Zruntest <- function(P, name_string, tol, num_of_exps, algo){
+Zruntest <- function(P, name_string, tol, num_of_exps, algo, seed){
   
   exactvol = exact_vol(P)
   vol = 0
   for (j in 1:num_of_exps) {
-    if (algo == "SOB") {
-      vol = vol + volume(P, rounding=TRUE)
+    if (algo == "CB") {
+      vol = vol + volume(P, settings = list("hpoly" = FALSE), rounding = FALSE, seed = seed)
     } else {
-      vol = vol + volume(P, error=0.2, Algo = "CG", rounding=TRUE)
+      vol = vol + volume(P, settings = list("algorithm" = "CG", "error" = 0.1), rounding = FALSE, seed = seed)
     }
   }
   vol = vol / num_of_exps
@@ -24,57 +24,22 @@ Zruntest <- function(P, name_string, tol, num_of_exps, algo){
 }
 
 cran_only = TRUE
-num_of_exps = 5
+num_of_exps = 2
 
 for (i in 1:2) {
   if (i==1) {
     algo = 'CG'
-    tol = 0.4
+    tol = 0.2
   } else {
-    algo = 'SOB'
+    algo = 'CB'
     tol = 0.2
   }
 
   test_that("Volume Zonotope_2_4", {
-    Z = GenZonotope(2, 4)
-    res = Zruntest(Z, 'Zonotope_2_4', tol, num_of_exps, algo)
+    #skip_if(Sys.info()[["machine"]] %in% c("x86_32"))
+    Z = gen_rand_zonotope(2, 4, seed = 127)
+    res = Zruntest(Z, 'Zonotope_2_4', tol, num_of_exps, algo, 5)
     expect_equal(res, 1)
   })
-  
-  if (!cran_only) {
-  test_that("Volume Zonotope_2_8", {
-    skip_on_cran()
-    Z = GenZonotope(2, 8)
-    res = Zruntest(Z, 'Zonotope_2_8', tol, num_of_exps, algo)
-    expect_equal(res, 1)
-  })
-  }
-  
-  if (!cran_only) {
-  test_that("Volume Zonotope_4_8", {
-    skip_on_cran()
-    Z = GenZonotope(4, 8)
-    res = Zruntest(Z, 'Zonotope_4_8', tol, num_of_exps, algo)
-    expect_equal(res, 1)
-  })
-  }
-  
-  if (!cran_only) {
-  test_that("Volume Zonotope_4_10", {
-    skip_on_cran()
-    Z = GenZonotope(4, 10)
-    res = Zruntest(Z, 'Zonotope_4_10', tol, num_of_exps, algo)
-    expect_equal(res, 1)
-  })
-  }
-  
-  if (!cran_only) {
-  test_that("Volume Zonotope_5_10", {
-    skip_on_cran()
-    Z = GenZonotope(5, 10)
-    res = Zruntest(Z, 'Zonotope_5_10', tol, num_of_exps, algo)
-    expect_equal(res, 1)
-  })
-  }
   
 }

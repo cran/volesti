@@ -6,143 +6,150 @@
 
 using namespace Rcpp;
 
-// InnerBall
-Rcpp::NumericVector InnerBall(Rcpp::Reference P);
-RcppExport SEXP _volesti_InnerBall(SEXP PSEXP) {
+// copula
+Rcpp::NumericMatrix copula(Rcpp::Nullable<Rcpp::NumericVector> r1, Rcpp::Nullable<Rcpp::NumericVector> r2, Rcpp::Nullable<Rcpp::NumericMatrix> sigma, Rcpp::Nullable<unsigned int> m, Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_copula(SEXP r1SEXP, SEXP r2SEXP, SEXP sigmaSEXP, SEXP mSEXP, SEXP nSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    rcpp_result_gen = Rcpp::wrap(InnerBall(P));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type m(mSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type n(nSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(copula(r1, r2, sigma, m, n, seed));
     return rcpp_result_gen;
 END_RCPP
 }
-// SliceOfSimplex
-double SliceOfSimplex(Rcpp::NumericVector a, double z0);
-RcppExport SEXP _volesti_SliceOfSimplex(SEXP aSEXP, SEXP z0SEXP) {
+// direct_sampling
+Rcpp::NumericMatrix direct_sampling(Rcpp::Nullable<Rcpp::List> body, Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_direct_sampling(SEXP bodySEXP, SEXP nSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type body(bodySEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type n(nSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(direct_sampling(body, n, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// exact_vol
+double exact_vol(Rcpp::Nullable<Rcpp::Reference> P);
+RcppExport SEXP _volesti_exact_vol(SEXP PSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Reference> >::type P(PSEXP);
+    rcpp_result_gen = Rcpp::wrap(exact_vol(P));
+    return rcpp_result_gen;
+END_RCPP
+}
+// frustum_of_simplex
+double frustum_of_simplex(Rcpp::NumericVector a, double z0);
+RcppExport SEXP _volesti_frustum_of_simplex(SEXP aSEXP, SEXP z0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type a(aSEXP);
     Rcpp::traits::input_parameter< double >::type z0(z0SEXP);
-    rcpp_result_gen = Rcpp::wrap(SliceOfSimplex(a, z0));
+    rcpp_result_gen = Rcpp::wrap(frustum_of_simplex(a, z0));
     return rcpp_result_gen;
 END_RCPP
 }
-// copula1
-Rcpp::NumericMatrix copula1(Rcpp::NumericVector h1, Rcpp::NumericVector h2, Rcpp::Nullable<unsigned int> numSlices, Rcpp::Nullable<unsigned int> N);
-RcppExport SEXP _volesti_copula1(SEXP h1SEXP, SEXP h2SEXP, SEXP numSlicesSEXP, SEXP NSEXP) {
+// inner_ball
+Rcpp::NumericVector inner_ball(Rcpp::Reference P);
+RcppExport SEXP _volesti_inner_ball(SEXP PSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type h1(h1SEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type h2(h2SEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type numSlices(numSlicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type N(NSEXP);
-    rcpp_result_gen = Rcpp::wrap(copula1(h1, h2, numSlices, N));
-    return rcpp_result_gen;
-END_RCPP
-}
-// copula2
-Rcpp::NumericMatrix copula2(Rcpp::NumericVector h, Rcpp::NumericMatrix E, Rcpp::Nullable<unsigned int> numSlices, Rcpp::Nullable<unsigned int> N);
-RcppExport SEXP _volesti_copula2(SEXP hSEXP, SEXP ESEXP, SEXP numSlicesSEXP, SEXP NSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type h(hSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type E(ESEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type numSlices(numSlicesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type N(NSEXP);
-    rcpp_result_gen = Rcpp::wrap(copula2(h, E, numSlices, N));
-    return rcpp_result_gen;
-END_RCPP
-}
-// exact_vol
-double exact_vol(Rcpp::Nullable<Rcpp::Reference> P, Rcpp::Nullable<std::string> body, Rcpp::Nullable<Rcpp::List> Parameters);
-RcppExport SEXP _volesti_exact_vol(SEXP PSEXP, SEXP bodySEXP, SEXP ParametersSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Reference> >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type body(bodySEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type Parameters(ParametersSEXP);
-    rcpp_result_gen = Rcpp::wrap(exact_vol(P, body, Parameters));
+    Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
+    rcpp_result_gen = Rcpp::wrap(inner_ball(P));
     return rcpp_result_gen;
 END_RCPP
 }
 // poly_gen
-Rcpp::NumericMatrix poly_gen(int kind_gen, bool Vpoly_gen, int dim_gen, int m_gen);
-RcppExport SEXP _volesti_poly_gen(SEXP kind_genSEXP, SEXP Vpoly_genSEXP, SEXP dim_genSEXP, SEXP m_genSEXP) {
+Rcpp::NumericMatrix poly_gen(int kind_gen, bool Vpoly_gen, bool Zono_gen, int dim_gen, int m_gen, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_poly_gen(SEXP kind_genSEXP, SEXP Vpoly_genSEXP, SEXP Zono_genSEXP, SEXP dim_genSEXP, SEXP m_genSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type kind_gen(kind_genSEXP);
     Rcpp::traits::input_parameter< bool >::type Vpoly_gen(Vpoly_genSEXP);
+    Rcpp::traits::input_parameter< bool >::type Zono_gen(Zono_genSEXP);
     Rcpp::traits::input_parameter< int >::type dim_gen(dim_genSEXP);
     Rcpp::traits::input_parameter< int >::type m_gen(m_genSEXP);
-    rcpp_result_gen = Rcpp::wrap(poly_gen(kind_gen, Vpoly_gen, dim_gen, m_gen));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(poly_gen(kind_gen, Vpoly_gen, Zono_gen, dim_gen, m_gen, seed));
     return rcpp_result_gen;
 END_RCPP
 }
 // rotating
-Rcpp::NumericMatrix rotating(Rcpp::Reference P);
-RcppExport SEXP _volesti_rotating(SEXP PSEXP) {
+Rcpp::NumericMatrix rotating(Rcpp::Reference P, Rcpp::Nullable<Rcpp::NumericMatrix> T, Rcpp::Nullable<int> seed);
+RcppExport SEXP _volesti_rotating(SEXP PSEXP, SEXP TSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    rcpp_result_gen = Rcpp::wrap(rotating(P));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericMatrix> >::type T(TSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<int> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(rotating(P, T, seed));
     return rcpp_result_gen;
 END_RCPP
 }
 // rounding
-Rcpp::List rounding(Rcpp::Reference P, Rcpp::Nullable<std::string> WalkType, Rcpp::Nullable<unsigned int> walk_step, Rcpp::Nullable<double> radius);
-RcppExport SEXP _volesti_rounding(SEXP PSEXP, SEXP WalkTypeSEXP, SEXP walk_stepSEXP, SEXP radiusSEXP) {
+Rcpp::List rounding(Rcpp::Reference P, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_rounding(SEXP PSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type WalkType(WalkTypeSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type walk_step(walk_stepSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type radius(radiusSEXP);
-    rcpp_result_gen = Rcpp::wrap(rounding(P, WalkType, walk_step, radius));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(rounding(P, seed));
     return rcpp_result_gen;
 END_RCPP
 }
 // sample_points
-Rcpp::NumericMatrix sample_points(Rcpp::Nullable<Rcpp::Reference> P, Rcpp::Nullable<unsigned int> N, Rcpp::Nullable<std::string> distribution, Rcpp::Nullable<std::string> WalkType, Rcpp::Nullable<unsigned int> walk_step, Rcpp::Nullable<bool> exact, Rcpp::Nullable<std::string> body, Rcpp::Nullable<Rcpp::List> Parameters, Rcpp::Nullable<Rcpp::NumericVector> InnerPoint);
-RcppExport SEXP _volesti_sample_points(SEXP PSEXP, SEXP NSEXP, SEXP distributionSEXP, SEXP WalkTypeSEXP, SEXP walk_stepSEXP, SEXP exactSEXP, SEXP bodySEXP, SEXP ParametersSEXP, SEXP InnerPointSEXP) {
+Rcpp::NumericMatrix sample_points(Rcpp::Nullable<Rcpp::Reference> P, Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<Rcpp::List> random_walk, Rcpp::Nullable<Rcpp::List> distribution, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_sample_points(SEXP PSEXP, SEXP nSEXP, SEXP random_walkSEXP, SEXP distributionSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Reference> >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type N(NSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type distribution(distributionSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type WalkType(WalkTypeSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type walk_step(walk_stepSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<bool> >::type exact(exactSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type body(bodySEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type Parameters(ParametersSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type InnerPoint(InnerPointSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_points(P, N, distribution, WalkType, walk_step, exact, body, Parameters, InnerPoint));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type n(nSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type random_walk(random_walkSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type distribution(distributionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(sample_points(P, n, random_walk, distribution, seed));
     return rcpp_result_gen;
 END_RCPP
 }
 // volume
-double volume(Rcpp::Reference P, Rcpp::Nullable<unsigned int> walk_step, Rcpp::Nullable<double> error, Rcpp::Nullable<Rcpp::NumericVector> InnerBall, Rcpp::Nullable<std::string> Algo, Rcpp::Nullable<std::string> WalkType, Rcpp::Nullable<bool> rounding, Rcpp::Nullable<Rcpp::List> Parameters);
-RcppExport SEXP _volesti_volume(SEXP PSEXP, SEXP walk_stepSEXP, SEXP errorSEXP, SEXP InnerBallSEXP, SEXP AlgoSEXP, SEXP WalkTypeSEXP, SEXP roundingSEXP, SEXP ParametersSEXP) {
+double volume(Rcpp::Reference P, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<bool> rounding, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_volume(SEXP PSEXP, SEXP settingsSEXP, SEXP roundingSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type walk_step(walk_stepSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type error(errorSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type InnerBall(InnerBallSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type Algo(AlgoSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type WalkType(WalkTypeSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type settings(settingsSEXP);
     Rcpp::traits::input_parameter< Rcpp::Nullable<bool> >::type rounding(roundingSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type Parameters(ParametersSEXP);
-    rcpp_result_gen = Rcpp::wrap(volume(P, walk_step, error, InnerBall, Algo, WalkType, rounding, Parameters));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(volume(P, settings, rounding, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
+// zono_approx
+Rcpp::List zono_approx(Rcpp::Reference Z, Rcpp::Nullable<bool> fit_ratio, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<double> seed);
+RcppExport SEXP _volesti_zono_approx(SEXP ZSEXP, SEXP fit_ratioSEXP, SEXP settingsSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Reference >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<bool> >::type fit_ratio(fit_ratioSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type settings(settingsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(zono_approx(Z, fit_ratio, settings, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -150,16 +157,17 @@ END_RCPP
 RcppExport SEXP _rcpp_module_boot_yada();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_volesti_InnerBall", (DL_FUNC) &_volesti_InnerBall, 1},
-    {"_volesti_SliceOfSimplex", (DL_FUNC) &_volesti_SliceOfSimplex, 2},
-    {"_volesti_copula1", (DL_FUNC) &_volesti_copula1, 4},
-    {"_volesti_copula2", (DL_FUNC) &_volesti_copula2, 4},
-    {"_volesti_exact_vol", (DL_FUNC) &_volesti_exact_vol, 3},
-    {"_volesti_poly_gen", (DL_FUNC) &_volesti_poly_gen, 4},
-    {"_volesti_rotating", (DL_FUNC) &_volesti_rotating, 1},
-    {"_volesti_rounding", (DL_FUNC) &_volesti_rounding, 4},
-    {"_volesti_sample_points", (DL_FUNC) &_volesti_sample_points, 9},
-    {"_volesti_volume", (DL_FUNC) &_volesti_volume, 8},
+    {"_volesti_copula", (DL_FUNC) &_volesti_copula, 6},
+    {"_volesti_direct_sampling", (DL_FUNC) &_volesti_direct_sampling, 3},
+    {"_volesti_exact_vol", (DL_FUNC) &_volesti_exact_vol, 1},
+    {"_volesti_frustum_of_simplex", (DL_FUNC) &_volesti_frustum_of_simplex, 2},
+    {"_volesti_inner_ball", (DL_FUNC) &_volesti_inner_ball, 1},
+    {"_volesti_poly_gen", (DL_FUNC) &_volesti_poly_gen, 6},
+    {"_volesti_rotating", (DL_FUNC) &_volesti_rotating, 3},
+    {"_volesti_rounding", (DL_FUNC) &_volesti_rounding, 2},
+    {"_volesti_sample_points", (DL_FUNC) &_volesti_sample_points, 5},
+    {"_volesti_volume", (DL_FUNC) &_volesti_volume, 4},
+    {"_volesti_zono_approx", (DL_FUNC) &_volesti_zono_approx, 4},
     {"_rcpp_module_boot_yada", (DL_FUNC) &_rcpp_module_boot_yada, 0},
     {NULL, NULL, 0}
 };

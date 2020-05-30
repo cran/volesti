@@ -2,241 +2,287 @@
 
 // VolEsti (volume computation and sampling library)
 
-// Copyright (c) 20012-2018 Vissarion Fisikopoulos
-// Copyright (c) 2018 Apostolos Chalkis
+// Copyright (c) 20012-2020 Vissarion Fisikopoulos
+// Copyright (c) 2018-2020 Apostolos Chalkis
 
-//Contributed and/or modified by Apostolos Chalkis, as part of Google Summer of Code 2018 program.
+//Contributed and/or modified by Apostolos Chalkis, as part of Google Summer of Code 2018 and 2019 program.
 
 #include <Rcpp.h>
 #include <RcppEigen.h>
-#include "volume.h"
+#include <boost/random.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
+#include "random_walks/random_walks.hpp"
+#include "volume/volume_cooling_gaussians.hpp"
+#include "volume/volume_sequence_of_balls.hpp"
+#include "volume/volume_cooling_gaussians.hpp"
+#include "volume/volume_cooling_balls.hpp"
+#include "volume/volume_cooling_hpoly.hpp"
 
 
-template <class Point, class NT, class Polytope>
-double generic_volume(Polytope& P, unsigned int walk_step, double e,
-                      Rcpp::Nullable<Rcpp::NumericVector> InnerBall, bool CG, unsigned int win_len,
-                      unsigned int N, double C, double ratio, double frac,
-                      bool ball_walk, double delta, bool cdhr, bool rdhr, bool rounding)
+template <typename Polytope,  typename RNGType,  typename NT>
+double generic_volume(Polytope& P, RNGType &rng, unsigned int walk_length, NT e,
+                      bool CG, bool CB, unsigned int win_len,
+                      bool rounding, bool cdhr, bool rdhr, bool ball_walk,
+                      bool billiard, int type)
 {
-    bool rand_only=false,
-         NN=false,
-         birk=false,
-         verbose =false;
-    unsigned int n_threads=1;
+    typedef typename Polytope::MT MT;
+    typedef typename Polytope::VT VT;
+    typedef typename Polytope::PointType Point;
 
-    //unsigned int m;//=A.nrow()-1;
-    unsigned int n = P.dimension();//=A.ncol()-1;
-    unsigned int rnum = std::pow(e,-2) * 400 * n * std::log(n);
+    typedef HPolytope<Point> Hpolytope;
 
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    // the random engine with this seed
-    typedef boost::mt19937    RNGType;
-    RNGType rng(seed);
-    boost::random::uniform_real_distribution<>(urdist);
-    boost::random::uniform_real_distribution<> urdist1(-1,1);
+    NT round_val = 1.0;
+    unsigned int n = P.dimension();
 
-    std::pair<Point,NT> InnerB;
+    if (rounding) {
+        std::pair<Point, NT> InnerBall = P.ComputeInnerBall();
 
-    if(InnerBall.isNotNull()) { //if it is given as an input
-        // store internal point hat is given as input
-        Rcpp::NumericVector InnerVec = Rcpp::as<Rcpp::NumericVector>(InnerBall);
-        std::vector<NT> temp_p;
-        for (unsigned int j=0; j<n; j++){
-            temp_p.push_back(InnerVec[j]);
+        if (type == 1) {
+            round_val = round_polytope<CDHRWalk, MT, VT>(P, InnerBall, 10 + 10 * n, rng).second;
+        } else {
+            round_val = round_polytope<BilliardWalk, MT, VT>(P, InnerBall, 2, rng).second;
         }
-        InnerB.first = Point( n , temp_p.begin() , temp_p.end() );
-        // store the radius of the internal ball that is given as input
-        InnerB.second = InnerVec[n];
-    } else {
-        // no internal ball or point is given as input
-        InnerB = P.ComputeInnerBall();
     }
 
-    // initialization
-    vars<NT, RNGType> var(rnum,n,walk_step,n_threads,0.0,e,0,0.0,0, InnerB.second,rng,urdist,urdist1,
-                          delta,verbose,rand_only,rounding,NN,birk,ball_walk,cdhr,rdhr);
     NT vol;
     if (CG) {
-        vars<NT, RNGType> var2(rnum, n, 10 + n / 10, n_threads, 0.0, e, 0, 0.0, 0, InnerB.second, rng,
-                               urdist, urdist1, delta, verbose, rand_only, rounding, NN, birk, ball_walk, cdhr,rdhr);
-        vars_g<NT, RNGType> var1(n, walk_step, N, win_len, 1, e, InnerB.second, rng, C, frac, ratio, delta, false, verbose,
-                                 rand_only, rounding, NN, birk, ball_walk, cdhr, rdhr);
-        vol = volume_gaussian_annealing(P, var1, var2, InnerB);
+        if (cdhr) {
+            vol = volume_cooling_gaussians<GaussianCDHRWalk>(P, rng, e, walk_length);
+        } else if (rdhr) {
+            vol = volume_cooling_gaussians<GaussianRDHRWalk>(P, rng, e, walk_length);
+        } else {
+            vol = volume_cooling_gaussians<GaussianBallWalk>(P, rng, e, walk_length);
+        }
+    } else if (CB) {
+        if (cdhr) {
+            vol = volume_cooling_balls<CDHRWalk>(P, rng, e, walk_length, win_len);
+        } else if (rdhr) {
+            vol = volume_cooling_balls<RDHRWalk>(P, rng, e, walk_length, win_len);
+        } else if (ball_walk) {
+            vol = volume_cooling_balls<BallWalk>(P, rng, e, walk_length, win_len);
+        } else {
+            vol = volume_cooling_balls<BilliardWalk>(P, rng, e, walk_length, win_len);
+        }
     } else {
-        vol = volume(P, var, InnerB);
+        if (cdhr) {
+            vol = volume_sequence_of_balls<CDHRWalk>(P, rng, e, walk_length);
+        } else if (rdhr) {
+            vol = volume_sequence_of_balls<RDHRWalk>(P, rng, e, walk_length);
+        } else if (ball_walk) {
+            vol = volume_sequence_of_balls<BallWalk>(P, rng, e, walk_length);
+        } else {
+            vol = volume_sequence_of_balls<BilliardWalk>(P, rng, e, walk_length);
+        }
     }
-
-     return vol;
+    vol *= round_val;
+    return vol;
 }
 
-//' The main function for volume approximation of a convex Polytope (H-polytope, V-polytope or a zonotope)
+//' The main function for volume approximation of a convex Polytope (H-polytope, V-polytope, zonotope or intersection of two V-polytopes)
 //'
-//' For the volume approximation can be used two algorithms. Either SequenceOfBalls or CoolingGaussian. A H-polytope with \eqn{m} facets is described by a \eqn{m\times d} matrix \eqn{A} and a \eqn{m}-dimensional vector \eqn{b}, s.t.: \eqn{Ax\leq b}. A V-polytope is defined as the convex hull of \eqn{m} \eqn{d}-dimensional points which correspond to the vertices of P. A zonotope is desrcibed by the Minkowski sum of \eqn{m} \eqn{d}-dimensional segments.
+//' For the volume approximation can be used three algorithms. Either CoolingBodies (CB) or SequenceOfBalls (SOB) or CoolingGaussian (CG). An H-polytope with \eqn{m} facets is described by a \eqn{m\times d} matrix \eqn{A} and a \eqn{m}-dimensional vector \eqn{b}, s.t.: \eqn{P=\{x\ |\  Ax\leq b\} }. A V-polytope is defined as the convex hull of \eqn{m} \eqn{d}-dimensional points which correspond to the vertices of P. A zonotope is desrcibed by the Minkowski sum of \eqn{m} \eqn{d}-dimensional segments.
 //'
-//' @param P A convex polytope. It is an object from class (a) Hpolytope or (b) Vpolytope or (c) Zonotope.
-//' @param walk_step Optional. The number of the steps for the random walk. The default value is \eqn{\lfloor 10 + d/10\rfloor} for SequenceOfBalls and \eqn{1} for CoolingGaussian.
-//' @param error Optional. Declare the upper bound for the approximation error. The default value is \eqn{1} for SequenceOfBalls and \eqn{0.1} for CoolingGaussian.
-//' @param InnerBall Optional. A \eqn{d+1} vector that contains an inner ball. The first \eqn{d} coordinates corresponds to the center and the last one to the radius of the ball. If it is not given then for H-polytopes the Chebychev ball is computed, for V-polytopes \eqn{d+1} vertices are picked randomly and the Chebychev ball of the defined simplex is computed. For a zonotope that is defined by the Minkowski sum of \eqn{m} segments we compute the maximal \eqn{r} s.t.: \eqn{re_i\in Z} for all \eqn{i=1,\dots ,d}, then the ball centered at the origin with radius \eqn{r/\sqrt{d}} is an inscribed ball.
-//' @param Algo Optional. A string that declares which algorithm to use: a) \code{'SoB'} for SequenceOfBalls or b) \code{'CG'} for CoolingGaussian.
-//' @param WalkType Optional. A string that declares the random walk method: a) \code{'CDHR'} for Coordinate Directions Hit-and-Run, b) \code{'RDHR'} for Random Directions Hit-and-Run or c) \code{'BW'} for Ball Walk. The default walk is \code{'CDHR'}.
-//' @param rounding Optional. A boolean parameter for rounding. The default value is \code{FALSE}.
-//' @param Parameters Optional. A list for the parameters of the algorithms:
+//' @param P A convex polytope. It is an object from class a) Hpolytope or b) Vpolytope or c) Zonotope or d) VpolytopeIntersection.
+//' @param settings Optional. A list that declares which algorithm, random walk and values of parameters to use, as follows:
 //' \itemize{
-//' \item{\code{Window} }{ The length of the sliding window for CG algorithm. The default value is \eqn{500+4dimension^2}.}
-//'  \item{\code{C} }{ A constant for the lower bound of \eqn{variance/mean^2} in schedule annealing of CG algorithm. The default value is \eqn{2}.}
-//'  \item{\code{N} }{ The number of points we sample in each step of schedule annealing in CG algorithm. The default value is \eqn{500C + dimension^2 / 2}.}
-//'  \item{\code{ratio} }{ Parameter of schedule annealing of CG algorithm, larger ratio means larger steps in schedule annealing. The default value is \eqn{1 - 1/dimension}.}
-//'  \item{\code{frac} }{ The fraction of the total error to spend in the first gaussian in CG algorithm. The default value is \eqn{0.1}.}
-//'  \item{\code{BW_rad} }{ The radius for the ball walk. The default value is \eqn{4r/dimension}, where \eqn{r} is the radius of the inscribed ball of the polytope.}
+//' \item{\code{algorithm} }{ A string to set the algorithm to use: a) \code{'CB'} for CB algorithm, b) \code{'SoB'} for SOB algorithm or b) \code{'CG'} for CG algorithm. The defalut algorithm for H-polytopes is \code{'CB'} when \eqn{d\leq 200} and \code{'CG'} when \eqn{d>200}. For the other representations the default algorithm is \code{'CB'}.}
+//' \item{\code{error} }{ A numeric value to set the upper bound for the approximation error. The default value is \eqn{1} for SOB algorithm and \eqn{0.1} otherwise.}
+//' \item{\code{random_walk} }{ A string that declares the random walk method: a) \code{'CDHR'} for Coordinate Directions Hit-and-Run, b) \code{'RDHR'} for Random Directions Hit-and-Run, c) \code{'BaW'} for Ball Walk, or \code{'BiW'} for Billiard walk. For CB and SOB algorithms the default walk is \code{'CDHR'} for H-polytopes and \code{'BiW'} for the other representations. For CG algorithm the default walk is \code{'CDHR'} for H-polytopes and \code{'RDHR'} for the other representations.}
+//' \item{\code{walk_length} }{ An integer to set the number of the steps for the random walk. The default value is \eqn{\lfloor 10 + d/10\rfloor} for \code{'SOB'} and \eqn{1} otherwise.}
+//' \item{\code{win_len} }{ The length of the sliding window for CB or CG algorithm. The default value is \eqn{400+3d^2} for CB or \eqn{500+4d^2} for CG.}
+//' \item{\code{hpoly} }{ A boolean parameter to use H-polytopes in MMC of CB algorithm when the input polytope is a zonotope. The default value is \code{TRUE} when the order of the zonotope is \eqn{<5}, otherwise it is \code{FALSE}.}
 //' }
+//' @param rounding Optional. A boolean parameter for rounding. The default value is \code{TRUE} for V-polytopes and \code{FALSE} otherwise.
+//' @param seed Optional. A fixed seed for the number generator.
 //'
 //' @references \cite{I.Z.Emiris and V. Fisikopoulos,
-//' \dQuote{Practical polytope volume approximation,} \emph{ACM Trans. Math. Soft.,} 2014.},
+//' \dQuote{Practical polytope volume approximation,} \emph{ACM Trans. Math. Soft.,} 2018.},
+//' @references \cite{A. Chalkis and I.Z.Emiris and V. Fisikopoulos,
+//' \dQuote{Practical Volume Estimation by a New Annealing Schedule for Cooling Convex Bodies,} \emph{CoRR, abs/1905.05494,} 2019.},
 //' @references \cite{B. Cousins and S. Vempala, \dQuote{A practical volume algorithm,} \emph{Springer-Verlag Berlin Heidelberg and The Mathematical Programming Society,} 2015.}
 //'
 //'
 //' @return The approximation of the volume of a convex polytope.
 //' @examples
-//' # calling SOB algorithm for a H-polytope (2d unit simplex)
-//' P = GenSimplex(2,'H')
-//' vol = volume(P)
 //'
-//' # calling CG algorithm for a V-polytope (3d simplex)
-//' P = GenSimplex(2,'V')
-//' vol = volume(P, Algo = "CG")
+//' # calling SOB algorithm for a H-polytope (3d unit simplex)
+//' HP = gen_cube(3,'H')
+//' vol = volume(HP)
+//'
+//' # calling CG algorithm for a V-polytope (2d simplex)
+//' VP = gen_simplex(2,'V')
+//' vol = volume(VP, settings = list("algorithm" = "CG"))
 //'
 //' # calling CG algorithm for a 2-dimensional zonotope defined as the Minkowski sum of 4 segments
-//' Z = GenZonotope(2, 4)
-//' vol = volume(Z, WalkType = "RDHR", walk_step = 5)
+//' Z = gen_rand_zonotope(2, 4)
+//' vol = volume(Z, settings = list("random_walk" = "RDHR", "walk_length" = 2))
+//'
 //' @export
 // [[Rcpp::export]]
-double volume (Rcpp::Reference P,  Rcpp::Nullable<unsigned int> walk_step = R_NilValue,
-                Rcpp::Nullable<double> error = R_NilValue,
-                Rcpp::Nullable<Rcpp::NumericVector> InnerBall = R_NilValue,
-                Rcpp::Nullable<std::string> Algo = R_NilValue,
-                Rcpp::Nullable<std::string> WalkType = R_NilValue, Rcpp::Nullable<bool> rounding = R_NilValue,
-                Rcpp::Nullable<Rcpp::List> Parameters = R_NilValue) {
+double volume (Rcpp::Reference P,
+               Rcpp::Nullable<Rcpp::List> settings = R_NilValue,
+               Rcpp::Nullable<bool> rounding = R_NilValue,
+               Rcpp::Nullable<double> seed = R_NilValue) {
 
     typedef double NT;
     typedef Cartesian<NT>    Kernel;
     typedef typename Kernel::Point    Point;
-    typedef boost::mt19937 RNGType;
+    typedef BoostRandomNumberGenerator<boost::mt19937, NT> RNGType;
     typedef HPolytope <Point> Hpolytope;
-    typedef VPolytope <Point, RNGType> Vpolytope;
+    typedef VPolytope<Point> Vpolytope;
     typedef Zonotope <Point> zonotope;
-    typedef IntersectionOfVpoly<Vpolytope> InterVP;
+    typedef IntersectionOfVpoly<Vpolytope, RNGType> InterVP;
     typedef Eigen::Matrix<NT,Eigen::Dynamic,1> VT;
     typedef Eigen::Matrix<NT,Eigen::Dynamic,Eigen::Dynamic> MT;
-    unsigned int n = P.field("dimension"), walkL;
+    unsigned int n = P.field("dimension"), walkL, type = P.field("type");
 
-    bool CG, cdhr = true, rdhr = false, ball_walk = false, round;
-    unsigned int win_len = 4*n*n+500, N = 500 * 2 +  n * n / 2;
-
-    double C = 2.0, ratio = 1.0-1.0/(NT(n)), frac = 0.1, e, delta = -1.0;
-
-    if(!rounding.isNotNull()){
-        round = false;
-    } else {
-        round = Rcpp::as<bool>(rounding);
+    RNGType rng(n);
+    if (seed.isNotNull()) {
+        unsigned seed2 = Rcpp::as<double>(seed);
+        rng.set_seed(seed2);
     }
 
-    if(!WalkType.isNotNull() || Rcpp::as<std::string>(WalkType).compare(std::string("CDHR"))==0){
-        cdhr = true;
-        rdhr = false;
-        ball_walk = false;
-    } else if (Rcpp::as<std::string>(WalkType).compare(std::string("RDHR"))==0) {
-        cdhr = false;
-        rdhr = true;
-        ball_walk = false;
-    } else if (Rcpp::as<std::string>(WalkType).compare(std::string("BW"))==0) {
-        cdhr = false;
-        rdhr = false;
-        ball_walk = true;
-    } else {
-        throw Rcpp::exception("Unknown walk type!");
-    }
+    bool CG = false, CB = false, cdhr = false, rdhr = false, ball_walk = false, round = false,
+             hpoly = false, billiard = false;
+    unsigned int win_len = 4*n*n+500;
+    
+    NT e;
 
-    if(!Algo.isNotNull() || Rcpp::as<std::string>(Algo).compare(std::string("SOB"))==0){
-
-        CG = false;
-
-        if(!walk_step.isNotNull()){
-            walkL= 10+n/10;
+    if (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("algorithm")) {
+        if (type == 2 || type == 3 || type == 4) {
+            CB = true;
+        } else if (n <= 200) {
+            CB = true;
         } else {
-            walkL = Rcpp::as<unsigned int>(walk_step);
+            CG = true;
         }
+        walkL = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("walk_length")) ? 1 : Rcpp::as<int>(
+                Rcpp::as<Rcpp::List>(settings)["walk_length"]);
+        e = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("error")) ? 0.1 : Rcpp::as<NT>(
+                Rcpp::as<Rcpp::List>(settings)["error"]);
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["algorithm"]).compare(std::string("SOB")) == 0) {
 
-        if(!error.isNotNull()){
-            e = 1.0;
-        } else {
-            e = Rcpp::as<NT>(error);
-        }
+        walkL = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("walk_length")) ? 10 + n / 10 : Rcpp::as<int>(
+                Rcpp::as<Rcpp::List>(settings)["walk_length"]);
+        e = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("error")) ? 1.0 : Rcpp::as<NT>(
+                Rcpp::as<Rcpp::List>(settings)["error"]);
 
-    } else if (Rcpp::as<std::string>(Algo).compare(std::string("CG"))==0) {
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["algorithm"]).compare(std::string("CG")) == 0) {
 
         CG = true;
+        walkL = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("walk_length")) ? 1 : Rcpp::as<int>(
+                Rcpp::as<Rcpp::List>(settings)["walk_length"]);
+        e = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("error")) ? 0.1 : Rcpp::as<NT>(
+                Rcpp::as<Rcpp::List>(settings)["error"]);
 
-        if (!error.isNotNull()) {
-            e = 0.1;
-        } else {
-            e = Rcpp::as<NT>(error);
-        }
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["algorithm"]).compare(std::string("CB")) == 0) {
 
-        if (!walk_step.isNotNull()) {
-            walkL = 1;
-        } else {
-            walkL = Rcpp::as<int>(walk_step);
-        }
+        CB = true;
+        walkL = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("walk_length")) ? 1 : Rcpp::as<int>(
+                Rcpp::as<Rcpp::List>(settings)["walk_length"]);
+        e = (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("error")) ? 0.1 : Rcpp::as<NT>(
+                Rcpp::as<Rcpp::List>(settings)["error"]);
 
     } else {
         throw Rcpp::exception("Unknown method!");
     }
 
-    if(Parameters.isNotNull()) {
 
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("BW_rad")) {
-            delta = Rcpp::as<NT>(Rcpp::as<Rcpp::List>(Parameters)["BW_rad"]);
+    if (!Rcpp::as<Rcpp::List>(settings).containsElementNamed("random_walk")) {
+        if ( type == 1 ){
+            cdhr = true;
+            if (CB) win_len = 3*n*n+400;
+        } else {
+            if (CB) {
+                billiard = true;
+                win_len = 200;
+            } else {
+                rdhr = true;
+            }
         }
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("C")) {
-            C = Rcpp::as<NT>(Rcpp::as<Rcpp::List>(Parameters)["C"]);
-            N = 500 * ((int) C) + n * n / 2;
+    }else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["random_walk"]).compare(std::string("CDHR")) == 0) {
+        cdhr = true;
+        if (CB) win_len = 3*n*n+400;
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["random_walk"]).compare(std::string("RDHR")) == 0) {
+        rdhr = true;
+        if (CB) win_len = 3*n*n+400;
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["random_walk"]).compare(std::string("BaW")) == 0) {
+        ball_walk = true;
+    } else if (Rcpp::as<std::string>(Rcpp::as<Rcpp::List>(settings)["random_walk"]).compare(std::string("BiW")) == 0) {
+        if (CG) {
+            if (type !=1){
+                Rcpp::Rcout << "Billiard walk is not supported for CG algorithm. RDHR is used."<<std::endl;
+                rdhr = true;
+            } else {
+                Rcpp::Rcout << "Billiard walk is not supported for CG algorithm. CDHR is used."<<std::endl;
+                cdhr = true;
+            }
+        } else {
+            billiard = true;
+            win_len = 200;
         }
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("N")) {
-            N = Rcpp::as<int>(Rcpp::as<Rcpp::List>(Parameters)["N"]);
-        }
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("Window")) {
-            win_len = Rcpp::as<int>(Rcpp::as<Rcpp::List>(Parameters)["Window"]);
-        }
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("frac")) {
-            frac = Rcpp::as<NT>(Rcpp::as<Rcpp::List>(Parameters)["frac"]);
-        }
-        if (Rcpp::as<Rcpp::List>(Parameters).containsElementNamed("ratio")) {
-            ratio = Rcpp::as<NT>(Rcpp::as<Rcpp::List>(Parameters)["ratio"]);
-        }
+    }else {
+        throw Rcpp::exception("Unknown walk type!");
     }
 
-    int type = P.field("type");
+    if (e <= 0.0) {
+        throw Rcpp::exception("The error parameter has to be a positive number!");
+    }
+
+    if (!rounding.isNotNull() && type == 2){
+        round = true;
+    } else {
+        round = (!rounding.isNotNull()) ? false : Rcpp::as<bool>(rounding);
+    }
+
+    if (Rcpp::as<Rcpp::List>(settings).containsElementNamed("win_len")) {
+        win_len = Rcpp::as<int>(Rcpp::as<Rcpp::List>(settings)["win_len"]);
+        if (!CB && !CG) Rf_warning("flag 'win_len' can be used only for CG or CB algorithms.");
+    }
+
     switch(type) {
         case 1: {
             // Hpolytope
             Hpolytope HP;
             HP.init(n, Rcpp::as<MT>(P.field("A")), Rcpp::as<VT>(P.field("b")));
-            return generic_volume<Point, NT>(HP, walkL, e, InnerBall, CG, win_len, N, C, ratio, frac, ball_walk, delta,
-                                             cdhr, rdhr, round);
+            return generic_volume(HP, rng, walkL, e, CG, CB, win_len, round,
+                                             cdhr, rdhr, ball_walk, billiard, type);
         }
         case 2: {
             // Vpolytope
             Vpolytope VP;
             VP.init(n, Rcpp::as<MT>(P.field("V")), VT::Ones(Rcpp::as<MT>(P.field("V")).rows()));
-            return generic_volume<Point, NT>(VP, walkL, e, InnerBall, CG, win_len, N, C, ratio, frac, ball_walk, delta,
-                                             cdhr, rdhr, round);
+            return generic_volume(VP, rng, walkL, e, CG, CB, win_len, round,
+                                             cdhr, rdhr, ball_walk, billiard, type);
         }
         case 3: {
             // Zonotope
             zonotope ZP;
             ZP.init(n, Rcpp::as<MT>(P.field("G")), VT::Ones(Rcpp::as<MT>(P.field("G")).rows()));
-            return generic_volume<Point, NT>(ZP, walkL, e, InnerBall, CG, win_len, N, C, ratio, frac, ball_walk, delta,
-                                             cdhr, rdhr, round);
+            if (Rcpp::as<Rcpp::List>(settings).containsElementNamed("hpoly")) {
+                hpoly = Rcpp::as<bool>(Rcpp::as<Rcpp::List>(settings)["hpoly"]);
+                if (hpoly && !CB)
+                    Rf_warning("flag 'hpoly' can be used to only in MMC of CB algorithm for zonotopes.");
+            } else if (ZP.num_of_generators() / ZP.dimension() < 5) {
+                hpoly = true;
+            } else {
+                hpoly = false;
+            }
+            if (hpoly && CB) {
+                if (cdhr) {
+                    return volume_cooling_hpoly<CDHRWalk, Hpolytope>(ZP, rng, e, walkL, win_len);
+                } else if (rdhr) {
+                    return volume_cooling_hpoly<RDHRWalk, Hpolytope>(ZP, rng, e, walkL, win_len);
+                } else if (ball_walk) {
+                    return volume_cooling_hpoly<BallWalk, Hpolytope>(ZP, rng, e, walkL, win_len);
+                } else {
+                    return volume_cooling_hpoly<BilliardWalk, Hpolytope>(ZP, rng, e, walkL, win_len);
+                }
+            }
+            return generic_volume(ZP, rng, walkL, e, CG, CB, win_len, round,
+                                             cdhr, rdhr, ball_walk, billiard, type);
         }
         case 4: {
             // Intersection of two V-polytopes
@@ -245,26 +291,15 @@ double volume (Rcpp::Reference P,  Rcpp::Nullable<unsigned int> walk_step = R_Ni
             InterVP VPcVP;
             VP1.init(n, Rcpp::as<MT>(P.field("V1")), VT::Ones(Rcpp::as<MT>(P.field("V1")).rows()));
             VP2.init(n, Rcpp::as<MT>(P.field("V2")), VT::Ones(Rcpp::as<MT>(P.field("V2")).rows()));
-            VPcVP.init(VP1, VP2);
-            Rcpp::NumericVector InnerVec(n+1);
-            bool empty;
-            std::pair<Point, NT> InnerB = VPcVP.getInnerPoint_rad(empty);
-            if (empty) {
-                Rf_warning("Empty set");
-                return 0;
-            }
-            if(!InnerBall.isNotNull()) {
-                for (int i = 0; i < n; ++i) {
-                    InnerVec[i] = InnerB.first[i];
-                }
-                InnerVec[n] = InnerB.second;
+            if (!seed.isNotNull()) {
+                VPcVP.init(VP1, VP2);
             } else {
-
-                InnerVec = Rcpp::as<Rcpp::NumericVector>(InnerBall);
-
+                unsigned seed3 = Rcpp::as<double>(seed);
+                VPcVP.init(VP1, VP2, seed3);
             }
-            return generic_volume<Point, NT>(VPcVP, walkL, e, InnerVec, CG, win_len, N, C, ratio, frac, ball_walk,
-                                             delta, cdhr, rdhr, round);
+            if (!VPcVP.is_feasible()) throw Rcpp::exception("Empty set!");
+            return generic_volume(VPcVP, rng, walkL, e, CG, CB, win_len, round,
+                                             cdhr, rdhr, ball_walk, billiard, type);
         }
     }
 

@@ -4,10 +4,14 @@
 \alias{rotating}
 \title{An internal Rccp function for the random rotation of a convex polytope}
 \usage{
-rotating(P)
+rotating(P, T = NULL, seed = NULL)
 }
 \arguments{
 \item{P}{A convex polytope (H-, V-polytope or a zonotope).}
+
+\item{T}{Optional. A rotation matrix.}
+
+\item{seed}{Optional. A fixed seed for the random linear map generator.}
 }
 \value{
 A matrix that describes the rotated polytope
@@ -15,8 +19,4 @@ A matrix that describes the rotated polytope
 \description{
 An internal Rccp function for the random rotation of a convex polytope
 }
-\section{warning}{
-
-Do not use this function.
-}
-
+\keyword{internal}
