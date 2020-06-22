@@ -125,6 +125,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// writeSdpaFormatFile
+void writeSdpaFormatFile(Rcpp::Nullable<Rcpp::Reference> spectrahedron, Rcpp::Nullable<Rcpp::NumericVector> objectiveFunction, Rcpp::Nullable<std::string> outputFile);
+RcppExport SEXP _volesti_writeSdpaFormatFile(SEXP spectrahedronSEXP, SEXP objectiveFunctionSEXP, SEXP outputFileSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Reference> >::type spectrahedron(spectrahedronSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type objectiveFunction(objectiveFunctionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type outputFile(outputFileSEXP);
+    writeSdpaFormatFile(spectrahedron, objectiveFunction, outputFile);
+    return R_NilValue;
+END_RCPP
+}
+// loadSdpaFormatFile
+Rcpp::List loadSdpaFormatFile(Rcpp::Nullable<std::string> inputFile);
+RcppExport SEXP _volesti_loadSdpaFormatFile(SEXP inputFileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type inputFile(inputFileSEXP);
+    rcpp_result_gen = Rcpp::wrap(loadSdpaFormatFile(inputFile));
+    return rcpp_result_gen;
+END_RCPP
+}
 // volume
 double volume(Rcpp::Reference P, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<bool> rounding, Rcpp::Nullable<double> seed);
 RcppExport SEXP _volesti_volume(SEXP PSEXP, SEXP settingsSEXP, SEXP roundingSEXP, SEXP seedSEXP) {
@@ -154,7 +177,8 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _rcpp_module_boot_yada();
+RcppExport SEXP _rcpp_module_boot_polytopes();
+RcppExport SEXP _rcpp_module_boot_spectrahedron();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_volesti_copula", (DL_FUNC) &_volesti_copula, 6},
@@ -166,9 +190,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_volesti_rotating", (DL_FUNC) &_volesti_rotating, 3},
     {"_volesti_rounding", (DL_FUNC) &_volesti_rounding, 2},
     {"_volesti_sample_points", (DL_FUNC) &_volesti_sample_points, 5},
+    {"_volesti_writeSdpaFormatFile", (DL_FUNC) &_volesti_writeSdpaFormatFile, 3},
+    {"_volesti_loadSdpaFormatFile", (DL_FUNC) &_volesti_loadSdpaFormatFile, 1},
     {"_volesti_volume", (DL_FUNC) &_volesti_volume, 4},
     {"_volesti_zono_approx", (DL_FUNC) &_volesti_zono_approx, 4},
-    {"_rcpp_module_boot_yada", (DL_FUNC) &_rcpp_module_boot_yada, 0},
+    {"_rcpp_module_boot_polytopes", (DL_FUNC) &_rcpp_module_boot_polytopes, 0},
+    {"_rcpp_module_boot_spectrahedron", (DL_FUNC) &_rcpp_module_boot_spectrahedron, 0},
     {NULL, NULL, 0}
 };
 

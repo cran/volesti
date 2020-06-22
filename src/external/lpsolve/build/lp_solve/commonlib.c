@@ -14,7 +14,7 @@
 #elif defined EnhTime
 # include <windows.h>
 #else
-# include <sys/timeb.h>
+# include <time.h>
 #endif
 
 #include <stdlib.h>
@@ -422,7 +422,7 @@ void hpsort(void *attributes, int count, int offset, int recsize, MYBOOL descend
         MEMCOPY(CMP_ATTRIBUTES(i), hold, recsize);
         i = j;
         j <<= 1;
-	    }
+        }
       else
         break;
     }
@@ -489,7 +489,7 @@ void hpsortex(void *attributes, int count, int offset, int recsize, MYBOOL desce
           tags[i] = tags[j];
           i = j;
           j <<= 1;
-  	    }
+        }
         else
           break;
       }
@@ -852,10 +852,7 @@ double timeNow(void)
   }
   return( timeBase + (double) now.QuadPart/(double) freq.QuadPart );
 #else
-  struct timeb buf;
-
-  ftime(&buf);
-  return((double)buf.time+((double) buf.millitm)/1000.0);
+    return((double)time(NULL));
 #endif
 }
 

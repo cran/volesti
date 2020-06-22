@@ -11,17 +11,17 @@ Description: Provides an R interface for 'volesti' C++ package. 'volesti' comput
              (a.k.a. zonotopes). There are three algorithms for volume estimation as well as algorithms 
              for sampling, rounding and rotating polytopes. Moreover, 'volesti' provides algorithms for 
              estimating copulas useful in computational finance.
-Version: 1.1.0
-Date: 2020-05-29
+Version: 1.1.1
+Date: 2020-06-22
 Maintainer: Vissarion Fisikopoulos <vissarion.fisikopoulos@gmail.com>
 Depends: Rcpp (>= 0.12.17)
 Imports: methods, stats
 LinkingTo: Rcpp, RcppEigen, BH
 Suggests: testthat
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 BugReports: https://github.com/GeomScale/volume_approximation/issues
 NeedsCompilation: yes
-Packaged: 2020-05-29 19:17:56 UTC; tolis
+Packaged: 2020-06-22 15:53:39 UTC; vissarion
 Repository: CRAN
-Date/Publication: 2020-05-31 00:00:03 UTC
+Date/Publication: 2020-06-22 19:10:02 UTC
