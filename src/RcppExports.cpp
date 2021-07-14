@@ -160,17 +160,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// loadSdpaFormatFile
-Rcpp::List loadSdpaFormatFile(Rcpp::Nullable<std::string> inputFile);
-RcppExport SEXP _volesti_loadSdpaFormatFile(SEXP inputFileSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type inputFile(inputFileSEXP);
-    rcpp_result_gen = Rcpp::wrap(loadSdpaFormatFile(inputFile));
-    return rcpp_result_gen;
-END_RCPP
-}
 // zono_approx
 Rcpp::List zono_approx(Rcpp::Reference Z, Rcpp::Nullable<bool> fit_ratio, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<double> seed);
 RcppExport SEXP _volesti_zono_approx(SEXP ZSEXP, SEXP fit_ratioSEXP, SEXP settingsSEXP, SEXP seedSEXP) {
@@ -199,7 +188,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_volesti_sample_points", (DL_FUNC) &_volesti_sample_points, 4},
     {"_volesti_volume", (DL_FUNC) &_volesti_volume, 3},
     {"_volesti_write_sdpa_format_file", (DL_FUNC) &_volesti_write_sdpa_format_file, 3},
-    {"_volesti_loadSdpaFormatFile", (DL_FUNC) &_volesti_loadSdpaFormatFile, 1},
     {"_volesti_zono_approx", (DL_FUNC) &_volesti_zono_approx, 4},
     {NULL, NULL, 0}
 };

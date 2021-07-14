@@ -142,17 +142,13 @@ inner_ball <- function(P) {
     .Call(`_volesti_inner_ball`, P)
 }
 
-#' Read a SDPA format file
+#'  An internal Rccp function to read a SDPA format file
 #'
 #' @param input_file Name of the input file
 #'
-#' @return A list with two named items: an item "matrices" which is a list of the matrices and an vector "objFunction"
+#' @keywords internal
 #'
-#' @examples
-#' path = system.file('extdata', package = 'volesti')
-#' l = load_sdpa_format_file(paste0(path,'/sdpa_n2m3.txt'))
-#' 
-#' @export
+#' @return A list with two named items: an item "matrices" which is a list of the matrices and an vector "objFunction"
 load_sdpa_format_file <- function(input_file = NULL) {
     .Call(`_volesti_load_sdpa_format_file`, input_file)
 }
@@ -309,21 +305,6 @@ volume <- function(P, settings = NULL, rounding = FALSE) {
 #' @export
 write_sdpa_format_file <- function(spectrahedron, objective_function, output_file) {
     invisible(.Call(`_volesti_write_sdpa_format_file`, spectrahedron, objective_function, output_file))
-}
-
-#' Read a SDPA format file
-#'
-#' @param inputFile Name of the input file
-#'
-#' @return A list with two named items: an item "matrices" which is a list of the matrices and an vector "objFunction"
-#'
-#' @examples
-#' path = system.file('extdata', package = 'volesti')
-#' l = loadSdpaFormatFile(paste0(path,'/sdpa_n2m3.txt'))
-#' 
-#' @export
-loadSdpaFormatFile <- function(inputFile = NULL) {
-    .Call(`_volesti_loadSdpaFormatFile`, inputFile)
 }
 
 #' An internal Rccp function for the over-approximation of a zonotope
