@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // copula
 Rcpp::NumericMatrix copula(Rcpp::Nullable<Rcpp::NumericVector> r1, Rcpp::Nullable<Rcpp::NumericVector> r2, Rcpp::Nullable<Rcpp::NumericMatrix> sigma, Rcpp::Nullable<unsigned int> m, Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<double> seed);
 RcppExport SEXP _volesti_copula(SEXP r1SEXP, SEXP r2SEXP, SEXP sigmaSEXP, SEXP mSEXP, SEXP nSEXP, SEXP seedSEXP) {

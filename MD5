@@ -1,8 +1,8 @@
-cb364f7097bd739b04f87d6d860a57cd *DESCRIPTION
+5f76aa8164554cb64cd2b6f98782a886 *DESCRIPTION
 d14227e26f469c56b74a2edc1c14ff9d *NAMESPACE
-33dc1f64ed68e8a764475a3a7f994b83 *NEWS.md
+53ee688dd65434d690fc2fc0b1f85b5b *NEWS.md
 f3d565058e0024526e2cee71bd889413 *R/HpolytopeClass.R
-029c569c0ea78e31313a65609af34fbf *R/RcppExports.R
+ac4d7489dfa91b1dbe18255754ba7be3 *R/RcppExports.R
 8a4d00b675691d399e4cd6c7fb2fac33 *R/SpectrahedronClass.R
 3b337a2b3eee09c3f7e081b3ff20602f *R/VpolytopeClass.R
 8739f610a3e440068f211038d5930e5f *R/VpolytopeIntersectionClass.R
@@ -20,7 +20,7 @@ dd7ce88995d8c54985450b7915520ec3 *R/gen_rand_zonotope.R
 46c7776f67b6d5d74e3946196cea814b *R/rotate_polytope.R
 a574d3cdf1850ef12af70caa60c3a3d1 *R/round_polytope.R
 7f859426d23d8dd799263c7442877e10 *R/zonotope_approximation.R
-e50b87abadf2cbdfe718e6ad49d92106 *README.md
+c0f6dea108b67e93241a5836aa9a7f49 *README.md
 f198c825b9f3f91fb76d265d07facc76 *inst/AUTHORS
 df378b4b9433b9347a47c36d314c4904 *inst/COPYRIGHTS
 5af69a9a33ea06915db133f6a8daa387 *inst/extdata/birk10.ine
@@ -71,12 +71,12 @@ bc66990ea09766a57888ec5faa6fc11e *man/round_polytope.Rd
 b136d23c40b83fe1685869c0ed8426f5 *man/rounding.Rd
 4e4db8652e36d1998ea5d288da0a2fc5 *man/sample_points.Rd
 d3c63feebd46cd07219e66c3a4e31b5f *man/volume.Rd
-5f7eb9a2272c76a8f4bb65233f89261b *man/write_sdpa_format_file.Rd
+ba1f65eaddb8e63a8e154234835a5819 *man/write_sdpa_format_file.Rd
 29cbeb06b3776ddfac626316c204a480 *man/zono_approx.Rd
 bfc8ad63bc603a4999e8e81136c72be3 *man/zonotope_approximation.Rd
 acb9139fc2f99ee56b5d91ed8d6977a3 *src/Makevars
 551156bdd9bfacc75cec0086ad7465c3 *src/Makevars.win
-6eba34a803e352076ed27766d93e2d8c *src/RcppExports.cpp
+12711cf1b3cf7ff40b390067426601c9 *src/RcppExports.cpp
 ec704a6838b01c50bc1f13a426a5811e *src/copula.cpp
 458f8528efb69909fea5259e6f2e9222 *src/direct_sampling.cpp
 3bdc51555e7193d1eb044a51e7575848 *src/exact_vol.cpp
@@ -134,7 +134,7 @@ c20bd8d3c4182a86ee541d30922a3e28 *src/external/lpsolve/headers/include/lp_mipbb.
 3bacaf46250b65aad4ab37a56faf77bd *src/external/lpsolve/headers/include/lp_price.h
 5ea4eb55461ac008097193bde14aa36f *src/external/lpsolve/headers/include/lp_pricePSE.h
 92960c99cd5e6ebda9fa9fcdc70589eb *src/external/lpsolve/headers/include/lp_report.h
-f489431d23b19aa3f3f3d2062f444a07 *src/external/lpsolve/headers/include/lp_rlp.h
+ceeb5d723b8ffc0ed934d23331987dea *src/external/lpsolve/headers/include/lp_rlp.h
 a511fd615183deccd43706525ea13da1 *src/external/lpsolve/headers/include/lp_scale.h
 968fa9dca8b0e5d5ee0d25cfc6f3fae1 *src/external/lpsolve/headers/include/lp_simplex.h
 11590e5896fa225c744c5e8ca77eb640 *src/external/lpsolve/headers/include/lp_types.h
@@ -213,7 +213,7 @@ c844a15bbe8c0f0818d7d950a203a11f *src/load_sdpa_format_file.cpp
 cf37e5c082868f7b7e0404815d950e18 *src/rounding.cpp
 8c50531a7e3db1de1d546275ee9ddba5 *src/sample_points.cpp
 c2ae87bc25c352246919eed72ca67705 *src/volume.cpp
-1b976ba36d80731d2b3020ba888ec1ba *src/write_sdpa_format_file.cpp
+a63cfcecaf79ae32e9a77fade205c56d *src/write_sdpa_format_file.cpp
 a7200a07cafb9fceca115828d7bc0336 *src/zonotope_approximation.cpp
 2be7fac74f684402be6e3781111b1aa4 *tests/testthat.R
 b0b4e81e0fe5e878910eb4635ba5a346 *tests/testthat/test_Hvol.R
