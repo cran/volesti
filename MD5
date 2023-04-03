@@ -1,6 +1,6 @@
-5f76aa8164554cb64cd2b6f98782a886 *DESCRIPTION
+722de9346f7e5bb24b82f0a63370ff4f *DESCRIPTION
 d14227e26f469c56b74a2edc1c14ff9d *NAMESPACE
-53ee688dd65434d690fc2fc0b1f85b5b *NEWS.md
+2b99408e3bd04dbea87cc72416308405 *NEWS.md
 f3d565058e0024526e2cee71bd889413 *R/HpolytopeClass.R
 ac4d7489dfa91b1dbe18255754ba7be3 *R/RcppExports.R
 8a4d00b675691d399e4cd6c7fb2fac33 *R/SpectrahedronClass.R
@@ -74,8 +74,8 @@ d3c63feebd46cd07219e66c3a4e31b5f *man/volume.Rd
 ba1f65eaddb8e63a8e154234835a5819 *man/write_sdpa_format_file.Rd
 29cbeb06b3776ddfac626316c204a480 *man/zono_approx.Rd
 bfc8ad63bc603a4999e8e81136c72be3 *man/zonotope_approximation.Rd
-acb9139fc2f99ee56b5d91ed8d6977a3 *src/Makevars
-551156bdd9bfacc75cec0086ad7465c3 *src/Makevars.win
+ce2325b2f8d8844614989e2e1b50f3da *src/Makevars
+0faeb05e5c8adcc35bcbd5b4d570760c *src/Makevars.win
 12711cf1b3cf7ff40b390067426601c9 *src/RcppExports.cpp
 ec704a6838b01c50bc1f13a426a5811e *src/copula.cpp
 458f8528efb69909fea5259e6f2e9222 *src/direct_sampling.cpp
@@ -96,7 +96,7 @@ cd1d2b860a41e1d82785acfec3479d47 *src/external/lpsolve/build/lp_solve/lp_lib.c
 f6248420f0737acd7f856b60a3bacd20 *src/external/lpsolve/build/lp_solve/lp_matrix.c
 1aa408464d1e73009c1b18158dbccca3 *src/external/lpsolve/build/lp_solve/lp_mipbb.c
 b03f53bb049e85ea8ab6eb5bf34046eb *src/external/lpsolve/build/lp_solve/lp_params.c
-8453aaf2f4d74ea53b4f0b5edb417a95 *src/external/lpsolve/build/lp_solve/lp_presolve.c
+8886f15ee92dae1745e710c3b165ffe7 *src/external/lpsolve/build/lp_solve/lp_presolve.c
 f37768b01af791363f331ab3dfc9a208 *src/external/lpsolve/build/lp_solve/lp_price.c
 efed5e304fdad4d8c8d6b4600d12bcf2 *src/external/lpsolve/build/lp_solve/lp_pricePSE.c
 f409ff0a7a69884c1e55fb21063ecb5f *src/external/lpsolve/build/lp_solve/lp_report.c
