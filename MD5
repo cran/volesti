@@ -1,6 +1,6 @@
-5100082fdd888488bd938e4846a25856 *DESCRIPTION
+b2842b944047ad62bac677e2e1d26881 *DESCRIPTION
 d14227e26f469c56b74a2edc1c14ff9d *NAMESPACE
-5cfa97a555734b0c4bc6c8f73f4c28b5 *NEWS.md
+5c68a70d0c7845a8aad1865c3b3d96db *NEWS.md
 f3d565058e0024526e2cee71bd889413 *R/HpolytopeClass.R
 ac4d7489dfa91b1dbe18255754ba7be3 *R/RcppExports.R
 8a4d00b675691d399e4cd6c7fb2fac33 *R/SpectrahedronClass.R
@@ -105,7 +105,7 @@ d34756bda14c22b48f449fe163aaa759 *src/external/lpsolve/build/lp_solve/lp_scale.c
 afb72e28027d5d14f57e68aa862ef25f *src/external/lpsolve/build/lp_solve/lp_simplex.c
 28a518b4bd6117a3b0f605a0fe29b671 *src/external/lpsolve/build/lp_solve/lp_utils.c
 dab9b341e0c7347a92e56690f04bdee8 *src/external/lpsolve/build/lp_solve/lp_wlp.c
-6191eec15257982d02bea75d53afefb3 *src/external/lpsolve/build/lp_solve/lusol.c
+548ea89f1c628321977f71f1258afec9 *src/external/lpsolve/build/lp_solve/lusol.c
 88425a642747c9ac64fd7f9203349d5b *src/external/lpsolve/build/lp_solve/lusol1.c
 db2a4d27cfa769c18876015d5aed5f23 *src/external/lpsolve/build/lp_solve/lusol2.c
 4484ec67924cf69f0b07d6579b135532 *src/external/lpsolve/build/lp_solve/lusol6a.c
