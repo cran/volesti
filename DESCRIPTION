@@ -14,8 +14,8 @@ Description: Provides an R interface for 'volesti' C++ package. 'volesti' comput
              for sampling, rounding and rotating polytopes. Moreover, 'volesti' provides algorithms for
              estimating copulas useful in computational finance. Methods implemented in 'volesti' are described
              in A. Chalkis and V. Fisikopoulos (2022) <doi:10.32614/RJ-2021-077> and references therein.
-Version: 1.1.2-8
-Date: 2024-10-7
+Version: 1.1.2-9
+Date: 2025-04-14
 Maintainer: Vissarion Fisikopoulos <vissarion.fisikopoulos@gmail.com>
 Depends: Rcpp (>= 0.12.17)
 Imports: methods, stats
@@ -25,9 +25,9 @@ Encoding: UTF-8
 RoxygenNote: 7.2.1
 BugReports: https://github.com/GeomScale/volesti/issues
 NeedsCompilation: yes
-Packaged: 2024-10-09 07:13:22 UTC; vissarion
+Packaged: 2025-04-29 09:35:22 UTC; vissarion
 Author: Vissarion Fisikopoulos [aut, cre, cph]
     (<https://orcid.org/0000-0002-0780-666X>),
   Apostolos Chalkis [aut, cph] (<https://orcid.org/0000-0002-4628-1907>)
 Repository: CRAN
-Date/Publication: 2024-10-09 08:30:01 UTC
+Date/Publication: 2025-04-29 11:40:02 UTC
